@@ -6,7 +6,7 @@ let activeFile = null;
 let fileManager = null;
 
 // Initialize WASM module
-import init, { FileManager, process_file_content } from './wasm_file_manager.js';
+import init, { FileManager, process_file_content } from './assets/wasm_file_manager.js';
 
 async function initializeWasm() {
     await init();

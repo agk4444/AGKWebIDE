@@ -34,7 +34,7 @@ RUN npm ci --only=production
 COPY . .
 
 # Copy built WASM files from wasm-builder stage
-COPY --from=wasm-builder /app/wasm-file-manager/pkg ./public/
+COPY --from=wasm-builder /app/wasm-file-manager/pkg ./src/assets/
 
 # Build the application
 RUN npm run build

@@ -338,9 +338,10 @@ docker run --rm -v $(pwd):/app -w /app rust:slim \
 
 ```
 agk-web-ide/
-├── public/                 # Static assets
-│   ├── wasm_file_manager.js
-│   └── wasm_file_manager_bg.wasm
+├── src/
+│   ├── assets/             # WASM modules and assets
+│   │   ├── wasm_file_manager.js
+│   │   └── wasm_file_manager_bg.wasm
 ├── src/
 │   ├── components/         # React components
 │   │   ├── FileTree.jsx

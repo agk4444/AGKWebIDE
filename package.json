@@ -9,7 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "wasm:build": "cd wasm-file-manager && wasm-pack build --target web --out-dir pkg",
-    "wasm:copy": "copy wasm-file-manager\\pkg\\*.* public",
+    "wasm:copy": "copy wasm-file-manager\\pkg\\*.* src\\assets",
     "docker:build": "docker build -t agk-web-ide .",
     "docker:run": "docker run -p 3000:80 agk-web-ide",
     "docker:dev": "docker-compose up --build",

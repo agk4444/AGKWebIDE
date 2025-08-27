@@ -21,8 +21,8 @@ const requiredFiles = [
   'src/components/AgenticPanel.jsx',
   'src/App.css',
   'src/index.css',
-  'public/wasm_file_manager.js',
-  'public/wasm_file_manager_bg.wasm',
+  'src/assets/wasm_file_manager.js',
+  'src/assets/wasm_file_manager_bg.wasm',
   'README.md',
   'LICENSE'
 ];
