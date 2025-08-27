@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, forwardRef, useImperativeHandle } from 'react'
 import * as monaco from 'monaco-editor'
 
-const MonacoEditor = forwardRef(({ value, language, theme, onChange }, ref) => {
+const MonacoEditor = forwardRef(({ value, language, theme, onChange, onCursorPositionChange }, ref) => {
   const editorRef = useRef(null)
   const monacoEditorRef = useRef(null)
 
@@ -14,7 +14,11 @@ const MonacoEditor = forwardRef(({ value, language, theme, onChange }, ref) => {
         monaco.editor.setModelLanguage(model, newLanguage)
       }
     },
-    focus: () => monacoEditorRef.current?.focus()
+    focus: () => monacoEditorRef.current?.focus(),
+    getCursorPosition: () => {
+      const position = monacoEditorRef.current?.getPosition()
+      return position ? { line: position.lineNumber, column: position.column } : { line: 1, column: 1 }
+    }
   }))
 
   useEffect(() => {
@@ -49,6 +53,16 @@ const MonacoEditor = forwardRef(({ value, language, theme, onChange }, ref) => {
       }
     })
 
+    // Listen for cursor position changes
+    const cursorDisposable = monacoEditorRef.current.onDidChangeCursorPosition((e) => {
+      if (onCursorPositionChange) {
+        onCursorPositionChange({
+          line: e.position.lineNumber,
+          column: e.position.column
+        })
+      }
+    })
+
     // Handle window resize
     const handleResize = () => {
       monacoEditorRef.current?.layout()
@@ -57,6 +71,7 @@ const MonacoEditor = forwardRef(({ value, language, theme, onChange }, ref) => {
 
     return () => {
       disposable.dispose()
+      cursorDisposable.dispose()
       window.removeEventListener('resize', handleResize)
       monacoEditorRef.current?.dispose()
     }

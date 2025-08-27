@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
-import FileTree from './components/FileTree'
+import TitleBar from './components/TitleBar'
+import ActivityBar from './components/ActivityBar'
+import Sidebar from './components/Sidebar'
 import EditorTabs from './components/EditorTabs'
 import MonacoEditor from './components/MonacoEditor'
-import AgenticPanel from './components/AgenticPanel'
+import StatusBar from './components/StatusBar'
+import Terminal from './components/Terminal'
+import CommandPalette from './components/CommandPalette'
 import init, { FileManager, process_file_content } from './assets/wasm_file_manager.js'
 import './App.css'
 
@@ -12,6 +16,11 @@ function App() {
   const [openFiles, setOpenFiles] = useState(new Map())
   const [activeFile, setActiveFile] = useState(null)
   const [wasmLoaded, setWasmLoaded] = useState(false)
+  const [activeView, setActiveView] = useState('explorer')
+  const [sidebarVisible, setSidebarVisible] = useState(true)
+  const [terminalVisible, setTerminalVisible] = useState(false)
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false)
+  const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 })
   const editorRef = useRef(null)
 
   // Initialize WASM on component mount
@@ -30,6 +39,64 @@ function App() {
 
     initializeWasm()
   }, [])
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        switch (e.key) {
+          case 'b':
+            e.preventDefault()
+            setSidebarVisible(prev => !prev)
+            break
+          case 'j':
+            e.preventDefault()
+            setTerminalVisible(prev => !prev)
+            break
+          case 'p':
+            if (e.shiftKey) {
+              e.preventDefault()
+              setCommandPaletteOpen(true)
+            }
+            break
+          case 'n':
+            e.preventDefault()
+            handleCommand('file.new')
+            break
+          case 'o':
+            e.preventDefault()
+            handleCommand('file.open')
+            break
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
+  // Command handler
+  const handleCommand = (commandId) => {
+    switch (commandId) {
+      case 'file.new':
+        createNewFile()
+        break
+      case 'file.open':
+        openFolder()
+        break
+      case 'view.toggleTerminal':
+        setTerminalVisible(prev => !prev)
+        break
+      case 'view.toggleSidebar':
+        setSidebarVisible(prev => !prev)
+        break
+      case 'workbench.action.showCommands':
+        setCommandPaletteOpen(true)
+        break
+      default:
+        console.log('Command executed:', commandId)
+    }
+  }
 
   // File operations
   const openFolder = async () => {
@@ -199,45 +266,80 @@ function App() {
   }
 
   return (
-    <div className="ide-container">
-      <div className="sidebar">
-        <FileTree
-          currentDirectoryHandle={currentDirectoryHandle}
-          onOpenFolder={openFolder}
-          onCreateNewFile={createNewFile}
-          onFileSelect={openFile}
+    <div className="vscode-container">
+      <TitleBar
+        title="AGK Web IDE - Untitled Workspace"
+        onCommandPalette={() => setCommandPaletteOpen(true)}
+      />
+
+      <div className="vscode-workbench">
+        <ActivityBar
+          activeView={activeView}
+          onViewChange={setActiveView}
         />
+
+        {sidebarVisible && (
+          <Sidebar
+            activeView={activeView}
+            currentDirectoryHandle={currentDirectoryHandle}
+            onOpenFolder={openFolder}
+            onCreateNewFile={createNewFile}
+            onFileSelect={openFile}
+          />
+        )}
+
+        <div className="vscode-editor-area">
+          <div className="vscode-editor-group">
+            <EditorTabs
+              openFiles={openFiles}
+              activeFile={activeFile}
+              onTabClick={(file) => setActiveFile(file)}
+              onTabClose={(path) => {
+                setOpenFiles(prev => {
+                  const newFiles = new Map(prev)
+                  newFiles.delete(path)
+                  return newFiles
+                })
+                if (activeFile && activeFile.path === path) {
+                  setActiveFile(null)
+                }
+              }}
+            />
+
+            <div className="vscode-editor-container">
+              <MonacoEditor
+                ref={editorRef}
+                value="// Welcome to AGK Web IDE\n// Start coding here...\n"
+                language="javascript"
+                theme="vs-dark"
+                onChange={(value) => {
+                  // Handle editor changes
+                }}
+                onCursorPositionChange={setCursorPosition}
+              />
+            </div>
+          </div>
+
+          {terminalVisible && (
+            <Terminal
+              isVisible={terminalVisible}
+              onToggle={() => setTerminalVisible(false)}
+            />
+          )}
+        </div>
       </div>
-      <div className="main-editor">
-        <EditorTabs
-          openFiles={openFiles}
-          activeFile={activeFile}
-          onTabClick={(file) => setActiveFile(file)}
-          onTabClose={(path) => {
-            setOpenFiles(prev => {
-              const newFiles = new Map(prev)
-              newFiles.delete(path)
-              return newFiles
-            })
-            if (activeFile && activeFile.path === path) {
-              setActiveFile(null)
-            }
-          }}
-        />
-        <MonacoEditor
-          ref={editorRef}
-          value="// Welcome to AGK Web IDE\n// Start coding here...\n"
-          language="javascript"
-          theme="vs-dark"
-          onChange={(value) => {
-            // Handle editor changes
-          }}
-        />
-        <AgenticPanel
-          onAnalyzeCode={handleAnalyzeCode}
-          onFormatCode={handleFormatCode}
-        />
-      </div>
+
+      <StatusBar
+        activeFile={activeFile}
+        cursorPosition={cursorPosition}
+        language={activeFile ? (fileManager ? fileManager.get_language_from_path(activeFile.path) : 'plaintext') : 'plaintext'}
+      />
+
+      <CommandPalette
+        isOpen={commandPaletteOpen}
+        onClose={() => setCommandPaletteOpen(false)}
+        onCommand={handleCommand}
+      />
     </div>
   )
 }
