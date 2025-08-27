@@ -3,7 +3,7 @@ import FileTree from './components/FileTree'
 import EditorTabs from './components/EditorTabs'
 import MonacoEditor from './components/MonacoEditor'
 import AgenticPanel from './components/AgenticPanel'
-import { initWasm, FileManager, process_file_content } from '/wasm_file_manager.js'
+import init, { FileManager, process_file_content } from '/wasm_file_manager.js'
 import './App.css'
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
   useEffect(() => {
     const initializeWasm = async () => {
       try {
-        await initWasm()
+        await init()
         const fm = new FileManager()
         setFileManager(fm)
         setWasmLoaded(true)
