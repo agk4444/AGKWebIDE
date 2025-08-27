@@ -1,0 +1,40 @@
+{
+  "name": "agk-web-ide",
+  "version": "1.0.0",
+  "description": "Agentic Web IDE with WASM File Management - AGK FIRE INC",
+  "main": "src/main.jsx",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "wasm:build": "cd wasm-file-manager && wasm-pack build --target web --out-dir pkg",
+    "wasm:copy": "copy wasm-file-manager\\pkg\\*.* public",
+    "docker:build": "docker build -t agk-web-ide .",
+    "docker:run": "docker run -p 3000:80 agk-web-ide",
+    "docker:dev": "docker-compose up --build",
+    "docker:prod": "docker-compose -f docker-compose.yml up -d",
+    "docker:stop": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:clean": "docker-compose down -v --remove-orphans"
+  },
+  "keywords": [
+    "ide",
+    "web",
+    "wasm",
+    "react",
+    "monaco-editor",
+    "file-management"
+  ],
+  "author": "AGK FIRE INC <agk4444@gmail.com>",
+  "license": "AGK-FIRE-INC",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "monaco-editor": "^0.44.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.0",
+    "vite": "^4.3.9"
+  }
+}

@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  agk-web-ide:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: agk-web-ide
+    ports:
+      - "3000:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.agk-web-ide.rule=Host(`localhost`)"
+      - "traefik.http.services.agk-web-ide.loadbalancer.server.port=80"
+    networks:
+      - web
+    volumes:
+      - nginx-logs:/var/log/nginx
+
+  # Optional: Add a reverse proxy with SSL termination
+  # traefik:
+  #   image: traefik:v2.5
+  #   container_name: agk-traefik
+  #   command:
+  #     - "--api.dashboard=true"
+  #     - "--providers.docker=true"
+  #     - "--providers.docker.exposedbydefault=false"
+  #     - "--entrypoints.web.address=:80"
+  #     - "--entrypoints.websecure.address=:443"
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #     - "8080:8080"  # Dashboard
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   networks:
+  #     - web
+
+networks:
+  web:
+    driver: bridge
+
+volumes:
+  nginx-logs:
+    driver: local
