@@ -1,7 +1,8 @@
 import React from 'react'
 import FileTree from './FileTree'
+import AIAssistant from './AIAssistant'
 
-function Sidebar({ activeView, currentDirectoryHandle, onOpenFolder, onCreateNewFile, onFileSelect }) {
+function Sidebar({ activeView, currentDirectoryHandle, onOpenFolder, onCreateNewFile, onFileSelect, onInsertCode, currentCode, selectedCode }) {
   const renderPanel = () => {
     switch (activeView) {
       case 'explorer':
@@ -65,6 +66,18 @@ function Sidebar({ activeView, currentDirectoryHandle, onOpenFolder, onCreateNew
               </div>
             </div>
           </div>
+        )
+      case 'ai':
+        return (
+          <AIAssistant
+            onInsertCode={onInsertCode}
+            onReplaceCode={(code) => {
+              // Handle code replacement
+              console.log('Replace code:', code)
+            }}
+            currentCode={currentCode}
+            selectedCode={selectedCode}
+          />
         )
       case 'extensions':
         return (

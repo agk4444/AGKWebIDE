@@ -5,6 +5,7 @@ function ActivityBar({ activeView, onViewChange }) {
     { id: 'explorer', icon: '📁', title: 'Explorer', color: '#ffffff' },
     { id: 'search', icon: '🔍', title: 'Search', color: '#ffffff' },
     { id: 'git', icon: '🟢', title: 'Source Control', color: '#ffffff' },
+    { id: 'ai', icon: '🤖', title: 'AI Assistant', color: '#ffffff' },
     { id: 'extensions', icon: '🔌', title: 'Extensions', color: '#ffffff' },
   ]
 

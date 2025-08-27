@@ -93,6 +93,43 @@ function App() {
       case 'workbench.action.showCommands':
         setCommandPaletteOpen(true)
         break
+      case 'ai.generateCode':
+        setActiveView('ai')
+        // Simulate AI code generation request
+        setTimeout(() => {
+          const aiPanel = document.querySelector('.ai-assistant')
+          if (aiPanel) {
+            const event = new CustomEvent('ai-request', {
+              detail: { type: 'generate', prompt: 'Generate a function to handle user authentication' }
+            })
+            aiPanel.dispatchEvent(event)
+          }
+        }, 100)
+        break
+      case 'ai.explainCode':
+        setActiveView('ai')
+        setTimeout(() => {
+          const aiPanel = document.querySelector('.ai-assistant')
+          if (aiPanel) {
+            const event = new CustomEvent('ai-request', {
+              detail: { type: 'explain', prompt: 'Explain what this code does' }
+            })
+            aiPanel.dispatchEvent(event)
+          }
+        }, 100)
+        break
+      case 'ai.fixBug':
+        setActiveView('ai')
+        setTimeout(() => {
+          const aiPanel = document.querySelector('.ai-assistant')
+          if (aiPanel) {
+            const event = new CustomEvent('ai-request', {
+              detail: { type: 'fix', prompt: 'Fix any bugs in this code' }
+            })
+            aiPanel.dispatchEvent(event)
+          }
+        }, 100)
+        break
       default:
         console.log('Command executed:', commandId)
     }
@@ -285,6 +322,15 @@ function App() {
             onOpenFolder={openFolder}
             onCreateNewFile={createNewFile}
             onFileSelect={openFile}
+            onInsertCode={(code) => {
+              if (editorRef.current) {
+                const currentValue = editorRef.current.getValue()
+                const newValue = currentValue + '\n\n' + code
+                editorRef.current.setValue(newValue)
+              }
+            }}
+            currentCode={editorRef.current?.getValue() || ''}
+            selectedCode="" // Could be enhanced to get selected text
           />
         )}
 

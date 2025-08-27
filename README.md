@@ -138,6 +138,7 @@ AGK Web IDE now features a complete **Visual Studio Code-like interface** with p
 - **📁 Explorer**: File and folder navigation
 - **🔍 Search**: Find and replace across files
 - **🟢 Source Control**: Git integration and changes
+- **🤖 AI Assistant**: AI-powered coding assistance
 - **🔌 Extensions**: Plugin management (future feature)
 
 #### **Title Bar**
@@ -238,12 +239,42 @@ AGK Web IDE now features a complete **Visual Studio Code-like interface** with p
 - **Search & Filter**: Quick file location
 - **Multi-Tab Editing**: Work with multiple files simultaneously
 
+### 🤖 AI Assistant
+
+The AI Assistant (`🤖` icon in activity bar) provides intelligent coding assistance powered by advanced AI algorithms:
+
+#### **AI Capabilities**
+- **💻 Code Generation**: Create functions, classes, and complete code solutions
+- **🔧 Bug Fixing**: Identify and fix errors in your code
+- **📚 Code Explanation**: Understand complex code with detailed explanations
+- **🔄 Refactoring**: Optimize and improve code structure
+- **📖 Documentation**: Generate comprehensive code documentation
+
+#### **Quick Actions**
+- **✨ Generate Code**: Create code based on natural language descriptions
+- **🔍 Explain Code**: Get detailed explanations of code functionality
+- **🐛 Fix Bug**: Automatically identify and fix bugs
+- **🔄 Refactor**: Improve code structure and performance
+
+#### **AI Chat Interface**
+- **Conversational AI**: Natural language interaction
+- **Context Awareness**: AI understands your current code and project
+- **Code Integration**: Apply AI suggestions directly to your editor
+- **Message History**: Complete conversation history and context
+
+#### **Smart Features**
+- **Language Detection**: Automatic programming language recognition
+- **Code Context**: AI analyzes your current file and selection
+- **Best Practices**: Suggestions follow industry standards
+- **Real-time Assistance**: Instant feedback as you code
+
 ### 🔍 Command Palette
 
 The command palette (`Ctrl+Shift+P`) provides quick access to:
 
 - **File Operations**: New File, Open Folder, Save
 - **View Controls**: Toggle Sidebar, Toggle Terminal
+- **AI Commands**: Generate Code, Explain Code, Fix Bug
 - **Developer Tools**: Reload Window, Show Commands
 - **Git Operations**: Commit, Push, Pull
 - **Terminal Commands**: Create New Terminal
