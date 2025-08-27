@@ -105,17 +105,111 @@ npm run build
 npm run preview
 ```
 
+## 🎨 VS Code-Like Interface
+
+AGK Web IDE now features a complete **Visual Studio Code-like interface** with professional design and functionality:
+
+### 🖥️ Interface Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 🪟 Title Bar (File Edit View Go Run Terminal Help)         │
+├─────────┬─────────────────────────────────────────────────────┤
+│ 📁      │ Explorer Panel                                   │
+│ 🔍      │                                                   │
+│ 🟢      │ File Tree • Open Editors • Outline               │
+│ 🔌      │                                                   │
+│ 🎛️      │ Search Results • Replace                        │
+├─────────┼─────────────────────────────────────────────────────┤
+│         │ 📝 Untitled-1              🔄     📁 main       │
+│         │                                                  │
+│         │ // Welcome to AGK Web IDE                      │
+│         │ // Start coding here...                        │
+│         │                                                  │
+│         │                                                  │
+├─────────┴─────────────────────────────────────────────────────┤
+│ 📊 Ln 1, Col 1    UTF-8    CRLF    Spaces: 2    TypeScript │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 🎯 Key Features
+
+#### **Activity Bar (Left Side)**
+- **📁 Explorer**: File and folder navigation
+- **🔍 Search**: Find and replace across files
+- **🟢 Source Control**: Git integration and changes
+- **🔌 Extensions**: Plugin management (future feature)
+
+#### **Title Bar**
+- **Menu Items**: File, Edit, View, Go, Run, Terminal, Help
+- **Window Controls**: Minimize, Maximize, Close
+- **Command Palette**: Search and execute commands
+
+#### **Sidebar Panels**
+- **Explorer**: File tree with create/open operations
+- **Search**: Global search with replace functionality
+- **Git**: Version control status and operations
+- **Extensions**: Extension marketplace (planned)
+
+#### **Editor Area**
+- **Multi-tab Interface**: Work with multiple files
+- **Monaco Editor**: Full VS Code editing experience
+- **Syntax Highlighting**: 20+ languages supported
+- **IntelliSense**: Auto-completion and error detection
+
+#### **Status Bar**
+- **File Information**: Current file name and icon
+- **Cursor Position**: Line and column numbers
+- **Language Mode**: Current programming language
+- **Encoding**: File encoding (UTF-8, etc.)
+- **Line Ending**: CRLF/CR/LF format
+- **Git Branch**: Current branch information
+
+#### **Terminal Panel**
+- **Integrated Terminal**: Command-line interface within IDE
+- **Basic Commands**: help, clear, pwd, ls, echo, date, whoami
+- **Command History**: Arrow keys for navigation
+- **Auto-scroll**: Follows command output
+
+### ⌨️ Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+B` | Toggle sidebar visibility |
+| `Ctrl+J` | Toggle terminal panel |
+| `Ctrl+Shift+P` | Open command palette |
+| `Ctrl+N` | Create new file |
+| `Ctrl+O` | Open folder |
+| `Ctrl+S` | Save current file |
+| `Ctrl+F` | Find in current file |
+| `Ctrl+H` | Replace in current file |
+
+### 🎨 Visual Design
+
+#### **Color Scheme**
+- **Primary Background**: `#1e1e1e` (VS Code dark)
+- **Secondary Background**: `#252526` (panels)
+- **Accent Color**: `#007acc` (selection, links)
+- **Text Colors**: `#cccccc` (primary), `#ffffff` (active)
+- **Borders**: `#3e3e42` (subtle divisions)
+
+#### **Typography**
+- **Editor Font**: Monaco, Consolas, or system monospace
+- **UI Font**: System UI font stack
+- **Font Sizes**: 13px (editor), 12px (UI), 11px (status)
+
 ## 📖 Usage Guide
 
 ### 🏠 Getting Started
 
 1. **Open a Project Folder**
-   - Click the "📂 Open Folder" button in the sidebar
+   - Click the "📁 Explorer" icon in the activity bar
+   - Click "📂 Open Folder" button in the sidebar
    - Select a local directory to work with
    - The file tree will populate with your project structure
 
 2. **Create New Files**
-   - Click "➕ New File" to create a new file
+   - Click "➕ New File" in the Explorer panel
    - Choose your preferred file extension
    - Start coding immediately!
 
@@ -123,6 +217,7 @@ npm run preview
    - Full Monaco Editor with IntelliSense
    - Syntax highlighting for 20+ languages
    - Auto-completion and error detection
+   - Real-time cursor position in status bar
 
 ### 🤖 Agentic Features
 
@@ -143,12 +238,15 @@ npm run preview
 - **Search & Filter**: Quick file location
 - **Multi-Tab Editing**: Work with multiple files simultaneously
 
-### ⌨️ Keyboard Shortcuts
+### 🔍 Command Palette
 
-- `Ctrl+S`: Save current file
-- `Ctrl+N`: New file
-- `Ctrl+O`: Open folder
-- `Ctrl+Shift+P`: Command palette (coming soon)
+The command palette (`Ctrl+Shift+P`) provides quick access to:
+
+- **File Operations**: New File, Open Folder, Save
+- **View Controls**: Toggle Sidebar, Toggle Terminal
+- **Developer Tools**: Reload Window, Show Commands
+- **Git Operations**: Commit, Push, Pull
+- **Terminal Commands**: Create New Terminal
 
 ## 🐳 Docker Architecture
 
