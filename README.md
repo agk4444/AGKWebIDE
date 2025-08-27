@@ -239,9 +239,32 @@ AGK Web IDE now features a complete **Visual Studio Code-like interface** with p
 - **Search & Filter**: Quick file location
 - **Multi-Tab Editing**: Work with multiple files simultaneously
 
-### 🤖 AI Assistant
+### 🤖 AI Assistant with xAI Grok
 
-The AI Assistant (`🤖` icon in activity bar) provides intelligent coding assistance powered by advanced AI algorithms:
+The AI Assistant (`🤖` icon in activity bar) provides intelligent coding assistance powered by **xAI's Grok Code Fast model**:
+
+#### 🚀 xAI Integration Setup
+
+##### **1. Get xAI API Key**
+1. Visit [xAI Platform](https://platform.x.ai)
+2. Create an account or sign in
+3. Generate an API key from your dashboard
+
+##### **2. Configure Environment**
+Create a `.env` file in the project root:
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and add your API key:
+```env
+VITE_XAI_API_KEY=your_actual_xai_api_key_here
+```
+
+##### **3. Restart Development Server**
+```bash
+npm run dev
+```
 
 #### **AI Capabilities**
 - **💻 Code Generation**: Create functions, classes, and complete code solutions
@@ -257,16 +280,18 @@ The AI Assistant (`🤖` icon in activity bar) provides intelligent coding assis
 - **🔄 Refactor**: Improve code structure and performance
 
 #### **AI Chat Interface**
-- **Conversational AI**: Natural language interaction
+- **Conversational AI**: Natural language interaction with Grok
 - **Context Awareness**: AI understands your current code and project
 - **Code Integration**: Apply AI suggestions directly to your editor
 - **Message History**: Complete conversation history and context
+- **Real-time Responses**: Live API calls to xAI's Grok model
 
 #### **Smart Features**
 - **Language Detection**: Automatic programming language recognition
 - **Code Context**: AI analyzes your current file and selection
 - **Best Practices**: Suggestions follow industry standards
 - **Real-time Assistance**: Instant feedback as you code
+- **xAI Integration**: Powered by Grok Code Fast model
 
 ### 🔍 Command Palette
 

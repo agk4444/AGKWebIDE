@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import xaiService from '../services/xaiService'
 
 function AIAssistant({ onInsertCode, onReplaceCode, currentCode, selectedCode }) {
   const [messages, setMessages] = useState([
@@ -29,56 +30,71 @@ function AIAssistant({ onInsertCode, onReplaceCode, currentCode, selectedCode })
     scrollToBottom()
   }, [messages])
 
-  const simulateAIResponse = (userMessage) => {
-    // Simulate AI processing time
+  const callXAI = async (userMessage) => {
     setIsTyping(true)
-    setTimeout(() => {
-      let response = ''
-      let suggestions = []
 
-      // Analyze the user message and generate appropriate response
+    try {
+      // Prepare context for AI
+      const context = {
+        language: selectedCode ? detectLanguage(selectedCode) : (currentCode ? detectLanguage(currentCode) : 'javascript'),
+        fileName: 'current_file',
+        projectType: 'web-development'
+      }
+
+      let result
+
+      // Determine the type of request and call appropriate xAI method
       const lowerMessage = userMessage.toLowerCase()
 
       if (lowerMessage.includes('generate') || lowerMessage.includes('create')) {
-        response = "I'll help you generate that code! Here's a well-structured solution:"
-        suggestions = [
-          {
-            type: 'code',
-            title: 'Generated Code',
-            content: `function exampleFunction(param) {\n  // Generated code here\n  console.log('Hello, ${param}!');\n  return param;\n}`
-          }
-        ]
+        result = await xaiService.generateCode(userMessage, context)
       } else if (lowerMessage.includes('explain') || lowerMessage.includes('what')) {
-        response = "Let me explain this code for you:"
-        if (currentCode) {
-          suggestions = [
-            {
-              type: 'explanation',
-              title: 'Code Explanation',
-              content: `This code appears to be a ${detectLanguage(currentCode)} function that...`
-            }
-          ]
-        }
+        const codeToExplain = selectedCode || currentCode || 'Please provide code to explain'
+        result = await xaiService.explainCode(codeToExplain, context)
       } else if (lowerMessage.includes('fix') || lowerMessage.includes('bug') || lowerMessage.includes('error')) {
-        response = "I found a potential issue in your code. Here's the fix:"
-        suggestions = [
-          {
-            type: 'fix',
-            title: 'Suggested Fix',
-            content: '// Fixed version\n' + (currentCode || '/* Your code here */')
-          }
-        ]
+        const codeToFix = selectedCode || currentCode || 'Please provide code to fix'
+        result = await xaiService.fixBug(codeToFix, '', context)
       } else if (lowerMessage.includes('refactor') || lowerMessage.includes('improve')) {
-        response = "Here's a refactored version with improvements:"
-        suggestions = [
-          {
-            type: 'refactor',
-            title: 'Refactored Code',
-            content: `// Improved version with better practices\n${currentCode || '/* Refactored code */'}`
-          }
-        ]
+        const codeToRefactor = selectedCode || currentCode || 'Please provide code to refactor'
+        result = await xaiService.refactorCode(codeToRefactor, userMessage, context)
       } else {
-        response = "I'm here to help! You can ask me to:\n\n• Generate code for specific tasks\n• Explain existing code\n• Fix bugs and errors\n• Refactor and optimize code\n• Add documentation\n• Suggest best practices\n\nWhat would you like me to help you with?"
+        // General query - use generateCode for natural language requests
+        result = await xaiService.generateCode(userMessage, context)
+      }
+
+      // Process the result
+      let response = result.content || result.explanation || 'I received your request but couldn\'t process it properly.'
+      let suggestions = []
+
+      // Extract code suggestions if available
+      if (result.code) {
+        suggestions.push({
+          type: 'code',
+          title: 'Generated Code',
+          content: result.code
+        })
+      }
+
+      if (result.fixedCode && result.fixedCode !== result.content) {
+        suggestions.push({
+          type: 'fix',
+          title: 'Fixed Code',
+          content: result.fixedCode
+        })
+      }
+
+      if (result.refactoredCode && result.refactoredCode !== result.content) {
+        suggestions.push({
+          type: 'refactor',
+          title: 'Refactored Code',
+          content: result.refactoredCode
+        })
+      }
+
+      // Add API status information
+      const apiStatus = xaiService.getStatus()
+      if (!apiStatus.available) {
+        response += '\n\n⚠️ **Note:** xAI API key not configured. Please set VITE_XAI_API_KEY environment variable to enable real AI responses.'
       }
 
       setMessages(prev => [...prev, {
@@ -86,11 +102,20 @@ function AIAssistant({ onInsertCode, onReplaceCode, currentCode, selectedCode })
         type: 'assistant',
         content: response,
         timestamp: new Date(),
-        suggestions: suggestions
+        suggestions: suggestions.length > 0 ? suggestions : undefined
       }])
 
+    } catch (error) {
+      console.error('AI Service Error:', error)
+      setMessages(prev => [...prev, {
+        id: Date.now(),
+        type: 'assistant',
+        content: `❌ Sorry, I encountered an error while processing your request: ${error.message}\n\nPlease check your xAI API configuration and try again.`,
+        timestamp: new Date()
+      }])
+    } finally {
       setIsTyping(false)
-    }, 1000 + Math.random() * 2000)
+    }
   }
 
   const detectLanguage = (code) => {
@@ -117,23 +142,29 @@ function AIAssistant({ onInsertCode, onReplaceCode, currentCode, selectedCode })
     setInputMessage('')
 
     // Generate AI response
-    simulateAIResponse(messageToSend)
+    callXAI(messageToSend)
   }
 
-  const handleQuickAction = (action) => {
+  const handleQuickAction = async (action) => {
     let message = ''
     switch (action) {
       case 'generate':
-        message = 'Generate a function to handle user authentication'
+        message = 'Generate a React component for a user login form'
         break
       case 'explain':
-        message = 'Explain what this code does'
+        message = selectedCode
+          ? `Explain what this selected code does: ${selectedCode}`
+          : 'Explain what this code does'
         break
       case 'fix':
-        message = 'Fix any bugs in this code'
+        message = selectedCode
+          ? `Fix any bugs in this selected code: ${selectedCode}`
+          : 'Fix any bugs in this code'
         break
       case 'refactor':
-        message = 'Refactor this code for better performance'
+        message = selectedCode
+          ? `Refactor this selected code for better performance and readability: ${selectedCode}`
+          : 'Refactor this code for better performance and readability'
         break
     }
 

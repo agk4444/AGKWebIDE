@@ -11,6 +11,8 @@ services:
       - "3000:80"
     environment:
       - NODE_ENV=production
+    env_file:
+      - .env
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/health"]
